@@ -14,7 +14,16 @@ mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB conectado!'))
     .catch(err => console.error(err));
 
-app.use(cors({ allowedHeaders: ["https://frontend-blogadmin.vercel.app", "https://blog.lucilua.com.br/", "*"] }));
+const corsOptions = {
+  origin: [
+    "https://frontend-blogadmin.vercel.app",
+    "https://blog.lucilua.com.br"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"], // se quiser limitar métodos
+  allowedHeaders: ["Content-Type", "Authorization"] // headers que aceita
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
