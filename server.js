@@ -75,6 +75,21 @@ app.get('/config', (req, res) => {
     res.json({ API_URL: process.env.API_URL });
 });
 
+
+// GET /api/posts/:id (buscar por ID)
+app.get('/api/posts/id/:id', async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ error: 'Post não encontrado' });
+        }
+        res.json(post);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 // PUT /api/posts/:id (atualizar post)
 app.put('/api/posts/:id', async (req, res) => {
     try {
