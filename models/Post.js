@@ -1,29 +1,14 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify');
 
 const PostSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  author: String,
-  capa: String,
-  content: String,
-  excerpt: String,
-  slug: { type: String, unique: true }, // slug para URL bonita
+  slug: { type: String, required: true, unique: true },
+  excerpt: { type: String, required: true },
+  author: { type: String, required: true },
+  capa: { type: String },
+  content: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date }
-});
-
-// Middleware para gerar slug automaticamente do título
-PostSchema.pre('save', function(next) {
-  if (this.isModified('title')) {
-    this.slug = slugify(this.title, { lower: true, strict: true });
-  }
-  next();
-});
-
-// Se for updateOne / findByIdAndUpdate, forçamos updatedAt
-PostSchema.pre('findOneAndUpdate', function(next) {
-  this.set({ updatedAt: Date.now() });
-  next();
+  updatedAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Post', PostSchema);
