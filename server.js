@@ -75,6 +75,26 @@ app.get('/config', (req, res) => {
     res.json({ API_URL: process.env.API_URL });
 });
 
+// PUT /api/posts/:id (atualizar post)
+app.put('/api/posts/:id', async (req, res) => {
+    try {
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.id,
+            { ...req.body, updatedAt: Date.now() }, // força updatedAt
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedPost) {
+            return res.status(404).json({ error: 'Post não encontrado' });
+        }
+
+        res.json(updatedPost);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
