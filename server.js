@@ -62,6 +62,10 @@ app.delete('/api/posts/:id', async (req, res) => {
   }
 });
 
+app.get('/config', (req, res) => {
+  res.json({ API_URL: process.env.API_URL });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
