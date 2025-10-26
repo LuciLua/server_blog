@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const Post = require('./models/Post');
 
 const app = express();
-const PORT = 3000;
+const PORT = 3003;
 
 const MONGO_URI = `mongodb+srv://lucilua81_db_user:${encodeURIComponent(process.env.PASSWORD)}@clusterblog.przjngv.mongodb.net/thelucilens?retryWrites=true&w=majority&appName=clusterblog`;
 
@@ -14,13 +14,22 @@ mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB conectado!'))
     .catch(err => console.error(err));
 
-const corsOptions = {
-  origin: [
+var origins = [
     "https://frontend-blogadmin.vercel.app",
     "https://blog.lucilua.com.br"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"], // se quiser limitar métodos
-  allowedHeaders: ["Content-Type", "Authorization"] // headers que aceita
+]
+
+if (process.env.NODE_ENV != 'production') {
+    origins.push('http://localhost:3000')
+    console.log('dev mode')
+} else{
+    console.log('prod mode')
+}
+
+const corsOptions = {
+    origin: origins,
+    methods: ["GET", "POST", "PUT", "DELETE"], // se quiser limitar métodos
+    allowedHeaders: ["Content-Type", "Authorization"] // headers que aceita
 };
 
 app.use(cors(corsOptions));
