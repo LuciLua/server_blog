@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const Post = require('./models/Post');
 
 const app = express();
-const PORT = 3003;
+const PORT = process.env.PORT;
 
 const MONGO_URI = `mongodb+srv://lucilua81_db_user:${encodeURIComponent(process.env.PASSWORD)}@clusterblog.przjngv.mongodb.net/thelucilens?retryWrites=true&w=majority&appName=clusterblog`;
 
