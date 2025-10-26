@@ -80,10 +80,6 @@ app.delete('/api/posts/:id', async (req, res) => {
     }
 });
 
-app.get('/config', (req, res) => {
-    res.json({ API_URL: process.env.API_URL });
-});
-
 
 // GET /api/posts/:id (buscar por ID)
 app.get('/api/posts/id/:id', async (req, res) => {
@@ -117,8 +113,6 @@ app.put('/api/posts/:id', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
-
-
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);

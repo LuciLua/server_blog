@@ -1,4 +1,7 @@
 {
+  "name": "serverblog",
+  "version": "0.0.1",
+  "license": "MIT",
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"
