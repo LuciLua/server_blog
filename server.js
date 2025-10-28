@@ -22,9 +22,27 @@ var origins = [
 if (process.env.NODE_ENV != 'production') {
     origins.push('http://localhost:3000')
     console.log('dev mode')
-} else{
+} else {
     console.log('prod mode')
 }
+
+
+// Middleware de autenticação
+function authenticateToken(req, res, next) {
+    const token = req.headers['authorization']; // lê o header Authorization
+
+    if (!token) {
+        return res.status(401).json({ error: 'Token não fornecido' });
+    }
+
+    if (token !== `Bearer ${process.env.API_TOKEN}`) {
+        return res.status(403).json({ error: 'Token inválido' });
+    }
+
+    console.log('ok')
+    next(); // continua se o token estiver correto
+}
+
 
 const corsOptions = {
     origin: origins,
@@ -35,6 +53,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.use(authenticateToken)
 
 // Rotas API
 app.get('/api/posts', async (req, res) => {
