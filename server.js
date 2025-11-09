@@ -52,7 +52,7 @@ function queryVerify(req, res, next) {
     if (passRecebida === passCorreta) {
         next(); // autorizado -> continua
     } else {
-        console.log('ERRO');
+        console.log('ERRO - ACESSO NAOAUTORIZADO');
         return res.status(403).json({ error: "Acesso não autorizado" });
     }
 }
@@ -68,7 +68,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(authenticateToken)
-app.use(queryVerify)
 
 // Rotas API
 app.get('/api/posts', async (req, res) => {
@@ -90,8 +89,8 @@ app.get('/api/posts/:slug', async (req, res) => {
     }
 });
 
-app.post('/api/posts', async (req, res) => {
-    console.log("teste1")
+app.post('/api/posts', queryVerify, async (req, res) => {
+    console.log("POST POSTS")
     try {
         const newPost = new Post(req.body);
         await newPost.save();
@@ -102,7 +101,7 @@ app.post('/api/posts', async (req, res) => {
 });
 
 // DELETE /api/posts/:id
-app.delete('/api/posts/:id', async (req, res) => {
+app.delete('/api/posts/:id', queryVerify, async (req, res) => {
     try {
         const deletedPost = await Post.findByIdAndDelete(req.params.id);
         if (!deletedPost) {
@@ -113,7 +112,6 @@ app.delete('/api/posts/:id', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 // GET /api/posts/:id (buscar por ID)
 app.get('/api/posts/id/:id', async (req, res) => {
@@ -130,11 +128,11 @@ app.get('/api/posts/id/:id', async (req, res) => {
 
 
 // PUT /api/posts/:id (atualizar post)
-app.put('/api/posts/:id', async (req, res) => {
+app.put('/api/posts/:id', queryVerify, async (req, res) => {
     try {
         const updatedPost = await Post.findByIdAndUpdate(
             req.params.id,
-            { ...req.body, updatedAt: Date.now() }, // força updatedAt
+            { ...req.body, updatedAt: Date.now() },
             { new: true, runValidators: true }
         );
 
