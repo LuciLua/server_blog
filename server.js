@@ -43,6 +43,20 @@ function authenticateToken(req, res, next) {
     next(); // continua se o token estiver correto
 }
 
+function queryVerify(req, res, next) {
+    const passCorreta = process.env.PASS;
+
+    // pega ?pass=...
+    const passRecebida = req.query.pass;
+
+    if (passRecebida === passCorreta) {
+        next(); // autorizado -> continua
+    } else {
+        console.log('ERRO');
+        return res.status(403).json({ error: "Acesso não autorizado" });
+    }
+}
+
 
 const corsOptions = {
     origin: origins,
@@ -54,6 +68,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(authenticateToken)
+app.use(queryVerify)
 
 // Rotas API
 app.get('/api/posts', async (req, res) => {
